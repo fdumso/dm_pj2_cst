@@ -1,8 +1,5 @@
 package main;
 
-/**
- * Created by ocz on 16-6-8.
- */
 public enum Assignment {
     T, F;
 

@@ -2,9 +2,6 @@ package main;
 
 import java.util.Stack;
 
-/**
- * Created by freemso on 2016/5/2.
- */
 public class Parser {
     public static Proposition parse(String string) {
         string = string.trim();

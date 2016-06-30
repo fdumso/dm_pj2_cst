@@ -1,4 +1,4 @@
-((z \eq (\not (c \imply (\not (D \eq J))))) \or ((\not a) \imply (\not B)))
+(A_{1} \or B_{1})
 2
 (A_{1} \imply B_{2})
 (A_{2} \and B_{1})

@@ -1,8 +1,5 @@
 package main;
 
-/**
- * Created by freemso on 2016/5/2.
- */
 public class Proposition {
     private String text;
     private Proposition son1;
@@ -39,10 +36,6 @@ public class Proposition {
     }
 
     public String toString() {
-        return text;
-    }
-
-    public String getText() {
         return text;
     }
 

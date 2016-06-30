@@ -1,7 +1,6 @@
 package main;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -41,6 +40,6 @@ public class Main {
             System.err.print("Invalid input file");
             System.exit(-1);
         }
-        new CST(prop, premiseList).reduce();
+        System.out.print(new CST(prop, premiseList).reduce());
     }
 }

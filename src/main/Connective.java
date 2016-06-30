@@ -1,8 +1,5 @@
 package main;
 
-/**
- * Created by freemso on 2016/5/2.
- */
 public enum Connective {
     AND, OR, NOT, IMPLY, EQ;
 

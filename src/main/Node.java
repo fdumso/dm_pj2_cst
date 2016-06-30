@@ -1,10 +1,5 @@
 package main;
 
-import java.util.ArrayList;
-
-/**
- * Created by ocz on 16-6-7.
- */
 public class Node {
     private Proposition proposition;
     private Assignment assignment;
@@ -30,93 +25,33 @@ public class Node {
     }
 
 
-
-
-    public void add1Son(Node node) {
-        if (this.isLeaf) {
-            if (!contradictory&&!reduced) {
-                this.son1 = node;
-                this.isLeaf = false;
-                node.father = this;
-                node.level = level+1;
-            }
-        } else {
-            this.son1.add1Son(node);
-            if (this.son2!=null) {
-                this.son2.add1Son(node);
-            }
-        }
+    public void setProposition(Proposition proposition) {
+        this.proposition = proposition;
     }
 
-    public void add2SonH(Node node1, Node node2) {
-        if (this.isLeaf) {
-            if (!contradictory&&!reduced) {
-                this.son1 = node1;
-                this.son2 = node2;
-                this.isLeaf = false;
-                node1.father = this;
-                node2.father = this;
-                node1.level = level+1;
-                node2.level = level+1;
-            }
-        } else {
-            this.son1.add2SonH(node1, node2);
-            if (this.son2!=null) {
-                this.son2.add2SonH(node1, node2);
-            }
-        }
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
     }
 
-    public void add2SonV(Node node1, Node node2) {
-        if (this.isLeaf) {
-            if (!contradictory&&!reduced) {
-                this.son1 = node1;
-                this.isLeaf = false;
-                node1.father = this;
-                node1.level = level+1;
-                node1.son1 = node2;
-                node1.isLeaf = false;
-                node2.father = node1;
-                node2.level = node1.level+1;
-            }
-        } else {
-            this.son1.add2SonV(node1, node2);
-            if (this.son2!=null) {
-                this.son2.add2SonV(node1, node2);
-            }
-        }
+    public void setFather(Node father) {
+        this.father = father;
     }
 
-    public void add4Son(Node node1, Node node2, Node node3, Node node4) {
-        if (this.isLeaf) {
-            if (!contradictory&&!reduced) {
-                this.son1 = node1;
-                this.son2 = node2;
-                this.isLeaf = false;
-                node1.father = this;
-                node2.father = this;
-                node1.level = level+1;
-                node2.level = level+1;
-
-                node1.son1 = node3;
-                node1.isLeaf = false;
-                node3.father = node1;
-                node3.level = node1.level+1;
-
-                node2.son1 = node4;
-                node2.isLeaf = false;
-                node4.father = node2;
-                node4.level = node2.level+1;
-            }
-        } else {
-            this.son1.add4Son(node1, node2, node3, node4);
-            if (this.son2!=null) {
-                this.son2.add4Son(node1, node2, node3, node4);
-            }
-        }
+    public void setSon1(Node son1) {
+        this.son1 = son1;
     }
 
+    public void setSon2(Node son2) {
+        this.son2 = son2;
+    }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setLeaf(boolean leaf) {
+        isLeaf = leaf;
+    }
 
     public Proposition getProposition() {
         return proposition;
