@@ -12,7 +12,8 @@ public class Node {
 
     private boolean isLeaf;
 
-    private boolean reduced;
+    private boolean checked;
+    private ReduceFlag reduceFlag;
     private boolean contradictory;
 
     public Node(Proposition proposition, Assignment assignment) {
@@ -20,8 +21,15 @@ public class Node {
         this.assignment = assignment;
 
         this.isLeaf = true;
-        this.reduced = false;
+        this.reduceFlag = new ReduceFlag(false);
         this.contradictory = false;
+        this.checked = false;
+    }
+
+    public Node copy() {
+        Node result = new Node(this.proposition, this.assignment);
+        result.reduceFlag = reduceFlag;
+        return result;
     }
 
 
@@ -81,19 +89,22 @@ public class Node {
         return level;
     }
 
-    public boolean isReduced() {
-        return reduced;
+    public boolean getReduceFlag() {
+        return reduceFlag.isReduced();
     }
 
     public boolean isContradictory() {
         return contradictory;
     }
 
-    public void setReduced(boolean reduced) {
-        this.reduced = reduced;
+    public void setReduceFlag(boolean reduced) {
+        this.reduceFlag.setReduced(reduced);
     }
 
     public void setContradictory(boolean contradictory) {
+        this.isLeaf = true;
+        this.son1 = null;
+        this.son2 = null;
         this.contradictory = contradictory;
     }
 
@@ -112,5 +123,45 @@ public class Node {
     @Override
     public String toString() {
         return this.assignment.toString()+" "+this.proposition.toString();
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public class ReduceFlag {
+        private boolean reduced;
+
+        public ReduceFlag(boolean reduced) {
+            this.reduced = reduced;
+        }
+
+        public boolean isReduced() {
+            return reduced;
+        }
+
+        public void setReduced(boolean reduced) {
+            this.reduced = reduced;
+        }
+    }
+
+    public class ContradictoryFlag {
+        private boolean contradictory;
+
+        public ContradictoryFlag(boolean contradictory) {
+            this.contradictory = contradictory;
+        }
+
+        public boolean isContradictory() {
+            return contradictory;
+        }
+
+        public void setContradictory(boolean contradictory) {
+            this.contradictory = contradictory;
+        }
     }
 }

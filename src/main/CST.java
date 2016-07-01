@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class CST {
     private Node root;
     private ArrayList<Node> premiseNodeList;
+    private String output;
+    private String counterExample;
 
     public CST(Proposition rootProp, ArrayList<Proposition> premiseList) {
         this.root = new Node(rootProp, Assignment.F);
@@ -12,44 +14,111 @@ public class CST {
         for (int i = 0; i < premiseList.size(); i++) {
             premiseNodeList.add(new Node(premiseList.get(i), Assignment.T));
         }
+        output = check();
+        counterExample = checkCounter();
     }
 
-    public String reduce() {
+    public String getOutput() {
+        return output;
+    }
+
+    public String getCounterExample() {
+        return counterExample;
+    }
+
+    private String checkCounter() {
         String result = "";
-        Node node = getLeastUnreducedNode(root);
+        Node counterNode = getCounterNode(root);
+        if (counterNode!=null) {
+            Node node = counterNode;
+            while (node!=null) {
+                if (node.getProposition().getType() == Proposition.Type.LETTER) {
+                    result += node.toString() + "\n";
+                }
+                node = node.getFather();
+            }
+        }
+        return result;
+    }
+
+    private Node getCounterNode(Node node) {
+        if (node.isLeaf()) {
+            if (!node.isContradictory()) {
+                return node;
+            } else {
+                return null;
+            }
+        } else {
+            Node fromSon1 = getCounterNode(node.getSon1());
+            if (fromSon1!=null) {
+                return fromSon1;
+            }
+            if (node.getSon2()!=null) {
+                return getCounterNode(node.getSon2());
+            }
+            return null;
+        }
+    }
+
+    private String check() {
+        String result = "";
+        Node node = next(root);
         if (node==null) {
             return "";
         }
-        if (node == root) {
-            result += root.toString() + "\n";
-        }
-
+        result += node.toString() + "\n";
         if (node.getProposition().getType() == Proposition.Type.LETTER) {
             // check contradiction
             boolean contradictory = node.contradictoryTo(node);
             node.setContradictory(contradictory);
+        }
+        if (!node.getReduceFlag()) {
+            reduce(node);
+        }
+        if (premiseNodeList.size() > 0) {
+            Node premise = premiseNodeList.get(0);
+            addPremise(root, premise);
+            premiseNodeList.remove(0);
+        }
+        node.setChecked(true);
+        result += check();
+        return result;
+    }
+
+
+
+    private void reduce(Node node) {
+        if (node.getProposition().getType() == Proposition.Type.LETTER) {
+            // do nothing
         } else if (node.getProposition().getType() == Proposition.Type.UNARY) {
             Node son = new Node((node.getProposition()).getSon1(), node.getAssignment().negate());
-            result += add1Son(node, node, son);
+            add1Son(node, node, son);
+
+
+            if (son.getProposition().getType() == Proposition.Type.LETTER) {
+                // check contradiction
+                boolean contradictory = node.contradictoryTo(node);
+                node.setContradictory(contradictory);
+            }
         } else {
             if (node.getAssignment() == Assignment.T) {
                 switch (node.getProposition().getConnective()) {
                     case AND: {
                         Node son1= new Node(node.getProposition().getSon1(), Assignment.T);
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.T);
-                        result += add2SonV(node, node, son1, son2);
+                        add2SonV(node, node, son1, son2);
                         break;
                     }
                     case OR: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.T);
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.T);
-                        result += add2SonH(node, node, son1, son2);
+                        add2SonH(node, node, son1, son2);
                         break;
                     }
                     case IMPLY: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.F);
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.T);
-                        result += add2SonH(node, node, son1, son2);
+                        add2SonH(node, node, son1, son2);
                         break;
                     }
                     case EQ: {
@@ -57,7 +126,7 @@ public class CST {
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.T);
                         Node son3 = new Node(node.getProposition().getSon1(), Assignment.F);
                         Node son4 = new Node(node.getProposition().getSon2(), Assignment.F);
-                        result += add4Son(node, node, son1, son2, son3, son4);
+                        add4Son(node, node, son1, son2, son3, son4);
                         break;
                     }
                 }
@@ -66,19 +135,19 @@ public class CST {
                     case AND: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.F);
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.F);
-                        result += add2SonH(node, node, son1, son2);
+                        add2SonH(node, node, son1, son2);
                         break;
                     }
                     case OR: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.F);
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.F);
-                        result += add2SonV(node, node, son1, son2);
+                        add2SonV(node, node, son1, son2);
                         break;
                     }
                     case IMPLY: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.T);
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.F);
-                        result += add2SonV(node, node, son1, son2);
+                        add2SonV(node, node, son1, son2);
                         break;
                     }
                     case EQ: {
@@ -86,124 +155,135 @@ public class CST {
                         Node son2 = new Node(node.getProposition().getSon2(), Assignment.F);
                         Node son3 = new Node(node.getProposition().getSon1(), Assignment.F);
                         Node son4 = new Node(node.getProposition().getSon2(), Assignment.T);
-                        result += add4Son(node, node, son1, son2, son3, son4);
+                        add4Son(node, node, son1, son2, son3, son4);
                         break;
                     }
                 }
             }
         }
-        node.setReduced(true);
-
-        if (premiseNodeList.size() > 0) {
-            Node premise = premiseNodeList.get(0);
-            result += addPremise(root, premise);
-            premiseNodeList.remove(0);
-        }
-        result += reduce();
-        return result;
+        node.setReduceFlag(true);
     }
 
-    public String addPremise(Node root, Node premise) {
-        String result = "";
+    private void addPremise(Node root, Node premise) {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
                 root.setSon1(premise);
                 root.setLeaf(false);
                 premise.setFather(root);
                 premise.setLevel(root.getLevel()+1);
-                result += premise.toString() + "\n";
             }
         } else {
-            result += addPremise(root.getSon1(), premise);
+            addPremise(root.getSon1(), premise);
             if (root.getSon2()!=null) {
-                result += addPremise(root.getSon2(), premise);
+                addPremise(root.getSon2(), premise);
             }
         }
-        return result;
     }
 
-    public String add1Son(Node root, Node father, Node son) {
-        String result = "";
+    private void add1Son(Node root, Node father, Node son) {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
-                root.setSon1(son);
+                father = father.copy();
+                son = son.copy();
+
+                root.setSon1(father);
                 root.setLeaf(false);
-                son.setFather(root);
-                son.setLevel(root.getLevel()+1);
-                result += father.toString() + "\n";
-                result += son.toString() + "\n";
+                father.setFather(root);
+                father.setLevel(root.getLevel()+1);
+
+                father.setSon1(son);
+                father.setLeaf(false);
+                son.setFather(father);
+                son.setLevel(father.getLevel()+1);
             }
         } else {
-            result += add1Son(root.getSon1(), father, son);
+            add1Son(root.getSon1(), father, son);
             if (root.getSon2()!=null) {
-                result += add1Son(root.getSon2(), father, son);
+                add1Son(root.getSon2(), father, son);
             }
         }
-        return result;
     }
 
-    public String add2SonH(Node root, Node father, Node son1, Node son2) {
-        String result = "";
+    private void add2SonH(Node root, Node father, Node son1, Node son2) {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
-                root.setSon1(son1);
-                root.setSon2(son2);
+                father = father.copy();
+                son1 = son1.copy();
+                son2 = son2.copy();
+
+                root.setSon1(father);
                 root.setLeaf(false);
-                son1.setFather(root);
-                son2.setFather(root);
-                son1.setLevel(root.getLevel()+1);
-                son2.setLevel(root.getLevel()+1);
-                result += father.toString() + "\n";
-                result += son1.toString() + "\n";
-                result += son2.toString() + "\n";
+                father.setFather(root);
+                father.setLevel(root.getLevel()+1);
+
+
+                father.setSon1(son1);
+                father.setSon2(son2);
+                father.setLeaf(false);
+                son1.setFather(father);
+                son2.setFather(father);
+                son1.setLevel(father.getLevel()+1);
+                son2.setLevel(father.getLevel()+1);
             }
         } else {
-            result += add2SonH(root.getSon1(), father, son1, son2);
+            add2SonH(root.getSon1(), father, son1, son2);
             if (root.getSon2()!=null) {
-                result += add2SonH(root.getSon2(), father, son1, son2);
+                add2SonH(root.getSon2(), father, son1, son2);
             }
         }
-        return result;
     }
 
-    public String add2SonV(Node root, Node father, Node son1, Node son2) {
-        String result = "";
+    private void add2SonV(Node root, Node father, Node son1, Node son2) {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
-                root.setSon1(son1);
+                father = father.copy();
+                son1 = son1.copy();
+                son2 = son2.copy();
+
+                root.setSon1(father);
                 root.setLeaf(false);
-                son1.setFather(root);
-                son1.setLevel(root.getLevel()+1);
+                father.setFather(root);
+                father.setLevel(root.getLevel()+1);
+
+                father.setSon1(son1);
+                father.setLeaf(false);
+                son1.setFather(father);
+                son1.setLevel(father.getLevel()+1);
 
                 son1.setSon1(son2);
                 son1.setLeaf(false);
                 son2.setFather(son1);
                 son2.setLevel(son1.getLevel()+1);
-
-                result += father.toString() + "\n";
-                result += son1.toString() + "\n";
-                result += son2.toString() + "\n";
             }
         } else {
-            result += add2SonV(root.getSon1(), father, son1, son2);
+            add2SonV(root.getSon1(), father, son1, son2);
             if (root.getSon2()!=null) {
-                result += add2SonV(root.getSon2(), father, son1, son2);
+                add2SonV(root.getSon2(), father, son1, son2);
             }
         }
-        return result;
     }
 
-    public String add4Son(Node root, Node father, Node son1, Node son2, Node son3, Node son4) {
-        String result = "";
+    private void add4Son(Node root, Node father, Node son1, Node son2, Node son3, Node son4) {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
-                root.setSon1(son1);
-                root.setSon2(son2);
+                father = father.copy();
+                son1 = son1.copy();
+                son2 = son2.copy();
+                son3 = son3.copy();
+                son4 = son4.copy();
+
+                root.setSon1(father);
                 root.setLeaf(false);
-                son1.setFather(root);
-                son2.setFather(root);
-                son1.setLevel(root.getLevel()+1);
-                son2.setLevel(root.getLevel()+1);
+                father.setFather(root);
+                father.setLevel(root.getLevel()+1);
+
+                father.setSon1(son1);
+                father.setSon2(son2);
+                father.setLeaf(false);
+                son1.setFather(father);
+                son2.setFather(father);
+                son1.setLevel(father.getLevel()+1);
+                son2.setLevel(father.getLevel()+1);
 
                 son1.setSon1(son3);
                 son1.setLeaf(false);
@@ -214,25 +294,17 @@ public class CST {
                 son2.setLeaf(false);
                 son4.setFather(son2);
                 son4.setLevel(son2.getLevel()+1);
-
-                result += father.toString() + "\n";
-                result += son1.toString() + "\n";
-                result += son2.toString() + "\n";
-                result += son3.toString() + "\n";
-                result += son4.toString() + "\n";
             }
         } else {
-            result += add4Son(root.getSon1(), father, son1, son2, son3, son4);
+            add4Son(root.getSon1(), father, son1, son2, son3, son4);
             if (root.getSon2()!=null) {
-                result += add4Son(root.getSon2(), father, son1, son2, son3, son4);
+                add4Son(root.getSon2(), father, son1, son2, son3, son4);
             }
         }
-        return result;
     }
 
-
-    public Node getLeastUnreducedNode(Node node) {
-        if (!node.isReduced()) {
+    private Node next(Node node) {
+        if (!node.isChecked()) {
             return node;
         } else {
             if (node.isLeaf()) {
@@ -240,8 +312,8 @@ public class CST {
             } else {
                 if (node.getSon2()!=null) {
                     // has two son
-                    Node fromSon1 = getLeastUnreducedNode(node.getSon1());
-                    Node fromSon2 = getLeastUnreducedNode(node.getSon2());
+                    Node fromSon1 = next(node.getSon1());
+                    Node fromSon2 = next(node.getSon2());
                     if (fromSon1==null&&fromSon2==null) {
                         return null;
                     } else if (fromSon1 == null) {
@@ -257,10 +329,10 @@ public class CST {
                     }
                 } else {
                     // has one son
-                    return getLeastUnreducedNode(node.getSon1());
+                    return next(node.getSon1());
                 }
             }
         }
-
     }
+
 }

@@ -40,6 +40,13 @@ public class Main {
             System.err.print("Invalid input file");
             System.exit(-1);
         }
-        System.out.print(new CST(prop, premiseList).reduce());
+        CST cst = new CST(prop, premiseList);
+        System.out.print(cst.getOutput());
+        String counterExample;
+        if (!(counterExample = cst.getCounterExample()).equals("")) {
+            System.out.println("\n\nCounter Example:\n"+counterExample+"All the other proposition letter unlisted can be T or F");
+        } else {
+            System.out.println("\n\nThere does not exist any counter example.");
+        }
     }
 }
