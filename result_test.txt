@@ -1,0 +1,94 @@
+F (((\not A_{12}) \and B_{1}) \eq (C \or D))
+F (((\not A_{12}) \and B_{1}) \eq (C \or D))
+T ((\not A_{12}) \and B_{1})
+F ((\not A_{12}) \and B_{1})
+F (C \or D)
+T (C \or D)
+T E
+T E
+T ((\not C) \and (\not D))
+T ((\not C) \and (\not D))
+T ((\not A_{12}) \and B_{1})
+T (B_{1} \imply A_{12})
+T (\not A_{12})
+F ((\not A_{12}) \and B_{1})
+T B_{1}
+F (\not A_{12})
+F B_{1}
+T (B_{1} \imply A_{12})
+T (C \or D)
+T (C \or D)
+F (C \or D)
+T C
+T D
+T C
+T D
+F C
+T ((\not C) \and (\not D))
+T ((\not C) \and (\not D))
+T ((\not C) \and (\not D))
+T ((\not C) \and (\not D))
+F D
+T (\not C)
+T (\not C)
+T (\not C)
+T (\not C)
+T ((\not C) \and (\not D))
+T (\not D)
+T (\not D)
+T (\not D)
+T (\not D)
+T (\not C)
+T (B_{1} \imply A_{12})
+T (B_{1} \imply A_{12})
+T (B_{1} \imply A_{12})
+T (B_{1} \imply A_{12})
+T (\not D)
+F B_{1}
+T A_{12}
+F B_{1}
+T A_{12}
+F B_{1}
+T A_{12}
+F B_{1}
+T A_{12}
+T (\not A_{12})
+F (\not A_{12})
+F (\not A_{12})
+F (\not A_{12})
+F (\not A_{12})
+T (\not C)
+T (\not C)
+T (\not C)
+T (\not C)
+F A_{12}
+T A_{12}
+T A_{12}
+T A_{12}
+T A_{12}
+F C
+F C
+F C
+F C
+T (B_{1} \imply A_{12})
+T (\not C)
+T (\not C)
+T (\not C)
+T (\not C)
+T (\not D)
+T (\not D)
+F B_{1}
+T A_{12}
+F C
+F C
+F C
+F C
+F D
+F D
+T (\not D)
+T (\not D)
+F D
+F D
+
+
+There does not exist any counter example.

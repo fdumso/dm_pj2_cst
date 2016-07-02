@@ -16,3 +16,5 @@ hs_err_pid*
 .idea/
 dm_pj2_cst.iml
 out/
+/output/
+/input/

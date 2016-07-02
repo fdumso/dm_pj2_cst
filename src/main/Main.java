@@ -1,18 +1,19 @@
 package main;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Proposition prop = null;
         ArrayList<Proposition> premiseList = new ArrayList<>();
         try {
             if (args.length == 1) {
-                File inputFile = new File("input/"+args[0]);
+                File inputFile = new File(args[0]);
                 if (!inputFile.exists()) {
                     throw  new IOException();
                 } else {
@@ -37,16 +38,21 @@ public class Main {
                 throw new IOException();
             }
         } catch (IOException e) {
-            System.err.print("Invalid input file");
+            System.err.println("Invalid input file");
             System.exit(-1);
         }
         CST cst = new CST(prop, premiseList);
-        System.out.print(cst.getOutput());
+
+        String result = cst.getOutput();
         String counterExample;
         if (!(counterExample = cst.getCounterExample()).equals("")) {
-            System.out.println("\n\nCounter Example:\n"+counterExample+"All the other proposition letter unlisted can be T or F");
+            result += "\n\nCounter Example:\n"+counterExample+"All the other proposition letter unlisted can be T or F";
         } else {
-            System.out.println("\n\nThere does not exist any counter example.");
+            result += "\n\nThere does not exist any counter example.";
         }
+
+        // output to file
+        FileOutputStream fos = new FileOutputStream("result_"+args[0]);
+        fos.write(result.getBytes());
     }
 }
