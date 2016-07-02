@@ -13,7 +13,7 @@ public class Node {
     private boolean isLeaf;
 
     private boolean checked;
-    private ReduceFlag reduceFlag;
+    private boolean reduceFlag;
     private boolean contradictory;
 
     public Node(Proposition proposition, Assignment assignment) {
@@ -21,14 +21,13 @@ public class Node {
         this.assignment = assignment;
 
         this.isLeaf = true;
-        this.reduceFlag = new ReduceFlag(false);
+        this.reduceFlag = false;
         this.contradictory = false;
         this.checked = false;
     }
 
     public Node copy() {
         Node result = new Node(this.proposition, this.assignment);
-        result.reduceFlag = reduceFlag;
         return result;
     }
 
@@ -90,7 +89,7 @@ public class Node {
     }
 
     public boolean getReduceFlag() {
-        return reduceFlag.isReduced();
+        return reduceFlag;
     }
 
     public boolean isContradictory() {
@@ -98,7 +97,7 @@ public class Node {
     }
 
     public void setReduceFlag(boolean reduced) {
-        this.reduceFlag.setReduced(reduced);
+        this.reduceFlag = reduced;
     }
 
     public void setContradictory(boolean contradictory) {
@@ -133,37 +132,5 @@ public class Node {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
-    }
-
-    public class ReduceFlag {
-        private boolean reduced;
-
-        public ReduceFlag(boolean reduced) {
-            this.reduced = reduced;
-        }
-
-        public boolean isReduced() {
-            return reduced;
-        }
-
-        public void setReduced(boolean reduced) {
-            this.reduced = reduced;
-        }
-    }
-
-    public class ContradictoryFlag {
-        private boolean contradictory;
-
-        public ContradictoryFlag(boolean contradictory) {
-            this.contradictory = contradictory;
-        }
-
-        public boolean isContradictory() {
-            return contradictory;
-        }
-
-        public void setContradictory(boolean contradictory) {
-            this.contradictory = contradictory;
-        }
     }
 }

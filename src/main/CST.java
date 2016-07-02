@@ -179,6 +179,7 @@ public class CST {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
                 father = father.copy();
+                father.setReduceFlag(true);
                 son = son.copy();
 
                 root.setSon1(father);
@@ -203,6 +204,7 @@ public class CST {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
                 father = father.copy();
+                father.setReduceFlag(true);
                 son1 = son1.copy();
                 son2 = son2.copy();
 
@@ -232,6 +234,7 @@ public class CST {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
                 father = father.copy();
+                father.setReduceFlag(true);
                 son1 = son1.copy();
                 son2 = son2.copy();
 
@@ -262,6 +265,7 @@ public class CST {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
                 father = father.copy();
+                father.setReduceFlag(true);
                 son1 = son1.copy();
                 son2 = son2.copy();
                 son3 = son3.copy();
