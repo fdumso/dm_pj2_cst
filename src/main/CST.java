@@ -93,13 +93,6 @@ public class CST {
         } else if (node.getProposition().getType() == Proposition.Type.UNARY) {
             Node son = new Node((node.getProposition()).getSon1(), node.getAssignment().negate());
             add1Son(node, node, son);
-
-
-            if (son.getProposition().getType() == Proposition.Type.LETTER) {
-                // check contradiction
-                boolean contradictory = node.contradictoryTo(node);
-                node.setContradictory(contradictory);
-            }
         } else {
             if (node.getAssignment() == Assignment.T) {
                 switch (node.getProposition().getConnective()) {
@@ -123,8 +116,8 @@ public class CST {
                     }
                     case EQ: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.T);
-                        Node son2 = new Node(node.getProposition().getSon2(), Assignment.T);
-                        Node son3 = new Node(node.getProposition().getSon1(), Assignment.F);
+                        Node son2 = new Node(node.getProposition().getSon1(), Assignment.F);
+                        Node son3 = new Node(node.getProposition().getSon2(), Assignment.T);
                         Node son4 = new Node(node.getProposition().getSon2(), Assignment.F);
                         add4Son(node, node, son1, son2, son3, son4);
                         break;
@@ -152,8 +145,8 @@ public class CST {
                     }
                     case EQ: {
                         Node son1 = new Node(node.getProposition().getSon1(), Assignment.T);
-                        Node son2 = new Node(node.getProposition().getSon2(), Assignment.F);
-                        Node son3 = new Node(node.getProposition().getSon1(), Assignment.F);
+                        Node son2 = new Node(node.getProposition().getSon1(), Assignment.F);
+                        Node son3 = new Node(node.getProposition().getSon2(), Assignment.F);
                         Node son4 = new Node(node.getProposition().getSon2(), Assignment.T);
                         add4Son(node, node, son1, son2, son3, son4);
                         break;
@@ -167,6 +160,8 @@ public class CST {
     private void addPremise(Node root, Node premise) {
         if (root.isLeaf()) {
             if (!root.isContradictory()) {
+                premise = premise.copy();
+
                 root.setSon1(premise);
                 root.setLeaf(false);
                 premise.setFather(root);

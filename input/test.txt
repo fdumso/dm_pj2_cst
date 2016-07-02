@@ -1,4 +1,3 @@
-(A \eq ( \not B))
-2
-A
-( \not B)
+(( A \imply B) \or C )
+1
+(A \or B)

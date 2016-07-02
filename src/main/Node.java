@@ -102,9 +102,11 @@ public class Node {
     }
 
     public void setContradictory(boolean contradictory) {
-        this.isLeaf = true;
-        this.son1 = null;
-        this.son2 = null;
+        if (contradictory) {
+            this.isLeaf = true;
+            this.son1 = null;
+            this.son2 = null;
+        }
         this.contradictory = contradictory;
     }
 
